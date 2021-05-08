@@ -18,7 +18,7 @@ public class PhysicsSimulator {
 	
 	public PhysicsSimulator (ForceLaws f, double deltaTime) { //constructor
 		
-		if(time <= 0 || f == null) { //si el tiempo es igual a 0 o no existe la fuerza salta excepcion
+		if(deltaTime <= 0 || f == null) { //si el tiempo es igual a 0 o no existe la fuerza salta excepcion
 			throw new IllegalArgumentException();
 		}
 		
@@ -120,4 +120,10 @@ public class PhysicsSimulator {
 		}
 		o.onRegister(list, time, deltaTime, f.toString());
 	}
+
+	public double getDeltaTime() {
+		return deltaTime;
+	}
+	
+	
 }

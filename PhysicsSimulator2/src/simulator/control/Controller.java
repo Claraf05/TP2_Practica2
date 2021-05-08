@@ -26,6 +26,7 @@ public class Controller {
 	private PhysicsSimulator ps;
 	private Factory<Body> b;
 	private Factory<ForceLaws> ffl;
+	private int steps = 0;
 	
 	public Controller(PhysicsSimulator ps, Factory<Body> b, Factory<ForceLaws> ffl) { //constructor
 		this.ps = ps;
@@ -34,6 +35,7 @@ public class Controller {
 	}
 	
 	public void run(int n, OutputStream out, InputStream expOut, StateComparator cmp) { //ejecucion del simulador fisico
+		this.steps = n;
 		if(expOut != null) { //si se ha especificado una salida esperada
 			JSONObject j = new JSONObject(new JSONTokener(expOut)); //pasamos expected output a json object
 			JSONArray listaStates = j.getJSONArray("states");
@@ -91,6 +93,15 @@ public class Controller {
 		}
 	}
 	
+	
+	public int getSteps() {
+		return steps;
+	}
+
+	public PhysicsSimulator getPs() {
+		return ps;
+	}
+
 	public void reset() {
 		this.ps.reset();
 	}
@@ -111,8 +122,10 @@ public class Controller {
 		ps.setForceLaws(ffl.createInstance(info));
 	}
 	
-	/*
+	
 	public void run(int n) {
-		
-	}*/
+		for (int i = 0; i < n ; i++) {
+			this.ps.advance();
+		}
+	}
 }
