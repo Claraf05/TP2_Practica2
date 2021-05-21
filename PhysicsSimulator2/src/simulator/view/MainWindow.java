@@ -2,6 +2,7 @@ package simulator.view;
 
 import java.awt.BorderLayout;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -12,6 +13,8 @@ public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	Controller _ctrl;
 	private ControlPanel controlPanel;
+	private BodiesTable bt;
+	private Viewer v;
 	
 	public MainWindow(Controller ctrl) {
 		
@@ -36,6 +39,21 @@ public class MainWindow extends JFrame {
 		
 		mainPanel.add(this.controlPanel, BorderLayout.PAGE_START);
 		
+		JPanel bodiesPanel = new JPanel();
+		bodiesPanel.setLayout(new BoxLayout(bodiesPanel, BoxLayout.Y_AXIS));
+		bt = new BodiesTable(_ctrl);
+		bodiesPanel.add(bt);
+		
+		v = new Viewer(_ctrl);
+		bodiesPanel.add(v);
+		
+		mainPanel.add(bodiesPanel);
+		
+		StatusBar statusBar = new StatusBar(_ctrl); 
+		
+		mainPanel.add(statusBar, BorderLayout.PAGE_END);
+		
+		pack();
 	}
 	
 	// Añade private/protected methods

@@ -37,10 +37,10 @@ public class BuilderBasedFactory<T> implements Factory<T>{
 	@Override
 	public List<JSONObject> getInfo() { //llama al getBuilderInfo de cada builder
 
+		this.listaObj = new ArrayList<JSONObject>();
+		
 		for(Builder<T> b: this.list) { //muestra la informacion de todos los builder de la lista de builders especifica
-			for(int i = 0; i<this.list.size(); i++) {
-				this.listaObj.add(b.getBuilderInfo());
-			}
+			this.listaObj.add(b.getBuilderInfo());
 		}
 		
 		return this.listaObj;

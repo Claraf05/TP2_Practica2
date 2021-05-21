@@ -14,7 +14,7 @@ public abstract class Builder<T> {
 		JSONObject j = new JSONObject();
 		j.put("type", this.typeTag);
 		j.put("desc", this.desc);
-		
+		j.put("data", this.createData());
 		return j;
 		
 	}

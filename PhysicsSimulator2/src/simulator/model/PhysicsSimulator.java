@@ -59,7 +59,7 @@ public class PhysicsSimulator {
 		this.time += deltaTime; //actualiza el tiempo actual
 		
 		for(SimulatorObserver o: listaObservadora) {
-			o.onAdvance(list, deltaTime);
+			o.onAdvance(list, time);
 		}
 	}
 	

@@ -27,6 +27,7 @@ public class Controller {
 	private Factory<Body> b;
 	private Factory<ForceLaws> ffl;
 	private int steps = 0;
+	JSONObject data;
 	
 	public Controller(PhysicsSimulator ps, Factory<Body> b, Factory<ForceLaws> ffl) { //constructor
 		this.ps = ps;

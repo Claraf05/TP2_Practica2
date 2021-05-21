@@ -18,12 +18,18 @@ public class MovingTowardsFixedPointBuilder<T> extends Builder<ForceLaws>{
 		
 		JSONObject data = j.getJSONObject("data");
 		MovingTowardsFixedPoint mtcp;
+		Vector2D c;
 		if(data.has("c")) { //si el data tiene un punto especificado se genera una instancia de la fuerza hacia dicho punto
-			Vector2D c = new Vector2D(data.getJSONArray("c").getDouble(0), data.getJSONArray("c").getDouble(1));
-			mtcp = new MovingTowardsFixedPoint(c, data.getDouble("g"));
+			c = new Vector2D(data.getJSONArray("c").getDouble(0), data.getJSONArray("c").getDouble(1));
 		}
 		else { //sino el punto por defecto es el centro, punto (0,0) y la g es 9,81
-			Vector2D c = new Vector2D(0,0);
+			c = new Vector2D(0,0);
+			
+		}
+		if(data.has("g")) {
+			mtcp = new MovingTowardsFixedPoint(c, data.getDouble("g"));
+		}
+		else {
 			mtcp = new MovingTowardsFixedPoint(c, 9.81);
 		}
 		

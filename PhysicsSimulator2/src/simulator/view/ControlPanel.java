@@ -42,6 +42,8 @@ import simulator.model.SimulatorObserver;
 
 public class ControlPanel extends JPanel implements SimulatorObserver {
 	
+	private static final long serialVersionUID = 1L;
+	
 	private Controller _ctrl;
 	private boolean _stopped;
 	
@@ -89,8 +91,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		_runButt = creaRunButton();
 		toolBar.add(_runButt);
 		
-		_stopButt = new JButton();
-		_stopButt.setIcon(new ImageIcon("resources/icons/stop.png"));
+		_stopButt = creaStopButton();
 		toolBar.add(_stopButt);
 		
 		
@@ -101,8 +102,9 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		toolBar.add(spinnoDesu);
 		
 		
-		SpinnerNumberModel stepsModel = new SpinnerNumberModel(0, 0, _ctrl.getSteps(), 1);
+		SpinnerNumberModel stepsModel = new SpinnerNumberModel(_ctrl.getSteps(), 0, 1000000000, 1);
 		sp = new JSpinner(stepsModel);
+		
 		Dimension dsp = new Dimension(100, 30);
 		sp.setMaximumSize(dsp);
 		sp.setPreferredSize(dsp);
@@ -131,25 +133,60 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		toolBar.add(deltaText);
 		
 		toolBar.add(Box.createHorizontalGlue());
-		_exitButt = new JButton();
-		_exitButt.setIcon(new ImageIcon("resources/icons/exit.png"));
+		
+		_exitButt = createExitButton();
 		toolBar.add(_exitButt);
 		
 	}	
 	
+	private JButton createExitButton() {
+		
+		JButton _exitButt = new JButton();
+		_exitButt.setIcon(new ImageIcon("resources/icons/exit.png"));
+		_exitButt.setToolTipText("Exit");
+		_exitButt.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String[] textoBotones = { "Que si!", "Que no!"};
+				int res = JOptionPane.showOptionDialog(_exitButt, "Are you sure you want to exit?", "Exit", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, textoBotones, textoBotones[1]);
+				if(res == JOptionPane.YES_OPTION) {
+					System.exit(0);
+				}
+			}
+		});
+		
+		return _exitButt;
+	}
+
+	private JButton creaStopButton() {
+		JButton _stopButt = new JButton();
+		_stopButt.setIcon(new ImageIcon("resources/icons/stop.png"));
+		_stopButt.setToolTipText("Stops the simulation");
+		_stopButt.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				_stopped = true;
+			}
+		});
+		
+		return _stopButt;
+	}
+
 	private JButton creaRunButton() {
 		
 		JButton _runButt = new JButton();
 		_runButt.setIcon(new ImageIcon("resources/icons/run.png"));
 		
-		_runButt.setToolTipText("Load bodies file into the editor");
+		_runButt.setToolTipText("Runs the simulation");
 		_runButt.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				desactivaBotones();
 				_stopped = false;
 				_ctrl.setDeltaTime(Double.valueOf(deltaText.getText()));
+				desactivaBotones();
 				run_sim(Integer.valueOf(sp.getValue().toString()));
 			}
 		});
@@ -173,9 +210,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				JDialog dg = new JDialog();
 				selectFl();
-				
 				
 			}
 		});
@@ -196,15 +231,15 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		
 		if(status == 0) {
 			JOptionPane.showMessageDialog(fld, "cancelled");
-			
+			fld = null;
 		}
 		else if(status == 1){
 			
-			JOptionPane.showMessageDialog(fld, "You chose: " + fld.getForce().getString("desc"));
-			
-			
 			//poner la tabla dependiendo de la fuerza 
+			_ctrl.setForceLaws(new JSONObject(fld.getForce()));
 			
+			JOptionPane.showMessageDialog(fld, "You chose: " + fld.getForce());
+			fld = null;
 		}
 	}
 
@@ -228,7 +263,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 					try {
 						in = new FileInputStream(ficherito);
 						_ctrl.loadBodies(in);
-					} catch (FileNotFoundException e1) {
+					} catch (Exception e1) {
 						JOptionPane.showMessageDialog(fc, "file could not be opened");
 					}
 					

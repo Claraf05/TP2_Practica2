@@ -289,9 +289,11 @@ public class Main {
 		_modeValue = line.getOptionValue("m");
 		
 		if(_modeValue == null) {
-			throw new ParseException("mal");
+			_modeValue = "batch";
 		}
-		
+		else if(!_modeValue.equalsIgnoreCase("GUI") && !_modeValue.equalsIgnoreCase("batch")) {
+			throw new ParseException("Incorrect mode");
+		}
 	}
 
 	private static void startBatchMode() throws Exception {
