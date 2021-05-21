@@ -25,7 +25,7 @@ public class Controller {
 	
 	private PhysicsSimulator ps;
 	private Factory<Body> b;
-	private Factory<ForceLaws> ffl;
+	private Factory<ForceLaws> ffl; //factoria de fuerzas
 	private int steps = 0;
 	JSONObject data;
 	
@@ -103,28 +103,27 @@ public class Controller {
 		return ps;
 	}
 
-	public void reset() {
-		this.ps.reset();
+	public void reset() { //metodo reset cuando cambia la lista de bodies
+		this.ps.reset(); //llama al reset de ps
 	}
 	
-	public void setDeltaTime(double dt) {
-		this.ps.setDeltaTime(dt);
+	public void setDeltaTime(double dt) { //metodo set delta time para cambiar el dt
+		this.ps.setDeltaTime(dt); //llama al metodo de ps
 	}
 	
-	public void addObserver(SimulatorObserver o) {
-		this.ps.addObserver(o);
+	public void addObserver(SimulatorObserver o) { //metodo para registrar una vista como observadora
+		this.ps.addObserver(o); //llama al metodo de ps
 	}
 	
-	public List<JSONObject> getForceLawsInfo(){
-		return ffl.getInfo();
+	public List<JSONObject> getForceLawsInfo() { //devuelve la informacion de todas las fuerzas que estan en la factoría de fuerzas ffl
+		return ffl.getInfo(); //llama al get info de builder based factory donde saca la info de cada fuerza
 	}
 	
-	public void setForceLaws(JSONObject info) {
-		ps.setForceLaws(ffl.createInstance(info));
+	public void setForceLaws(JSONObject info) { //metodo para cambiar la ley de fuerzas
+		ps.setForceLaws(ffl.createInstance(info)); //llama al metodo de ps antes transformando el info a ForceLaws
 	}
 	
-	
-	public void run(int n) {
+	public void run(int n) { //ejecuta n veces advance de ps, siendo n el numero de steps, este metodo se usa en la gui por si cambian las leyes de fuerzas, la lista de bodies...
 		for (int i = 0; i < n ; i++) {
 			this.ps.advance();
 		}

@@ -14,7 +14,7 @@ public class PhysicsSimulator {
 	private double deltaTime;
 	private List<Body> list; //lista de bodys del simulador
 	private double time;
-	private List<SimulatorObserver> listaObservadora;
+	private List<SimulatorObserver> listaObservadora; //lista de las vistas observadoras (las que implementan SimulatorObserver)
 	
 	public PhysicsSimulator (ForceLaws f, double deltaTime) { //constructor
 		
@@ -83,42 +83,42 @@ public class PhysicsSimulator {
 		return getState().toString();
 	}
 	
-	public void reset() { 
-		this.list.clear();
-		this.time = 0;
+	public void reset() { //metodo para cuando cambiamos la lista de bodies y reseteamos el tiempo
+		this.list.clear(); //limpiamos la lista de bodies para meter los nuevos luego
+		this.time = 0; //ponemos el tiempo actual a 0
 		
-		for(SimulatorObserver o: listaObservadora) {
-			o.onRegister(list, time, deltaTime, f.toString());
+		for(SimulatorObserver o: listaObservadora) { //avisa a las vistas observadoras que el simulador se ha reseteado
+			o.onReset(list, time, deltaTime, f.toString()); //le pasa los nuevos valores de los parametros
 		}
 	}
 	
-	public void setDeltaTime(double dt) {
-		if(dt <= 0) {
+	public void setDeltaTime(double dt) { //cambia el delta time
+		if(dt < 0) { //si es un valor invalido salta excepcion
 			throw new IllegalArgumentException();
 		}
-		this.deltaTime = dt;
+		this.deltaTime = dt; //actualizamos el delta time
 		
-		for(SimulatorObserver o: listaObservadora) {
-			o.onDeltaTimeChanged(this.deltaTime);
+		for(SimulatorObserver o: listaObservadora) { //avisa al resto de vistas observadoras que dt ha cambiado
+			o.onDeltaTimeChanged(this.deltaTime); //les pasa el nuevo dt
 		}
 	}
 	
-	public void setForceLaws(ForceLaws fl) {
-		if(fl == null) {
+	public void setForceLaws(ForceLaws fl) { //para cambiar la ley de fuerza
+		if(fl == null) { //si la fuerza es null salta excepcion
 			throw new IllegalArgumentException();
 		}
-		this.f = fl;
+		this.f = fl; //actualizamos la fuerza
 		
-		for(SimulatorObserver o: listaObservadora) {
-			o.onForceLawsChanged(this.f.toString());
+		for(SimulatorObserver o: listaObservadora) { //avisa al resto de vistas observadoras que la ley de fuerza cambió
+			o.onForceLawsChanged(this.f.toString()); //ls pasa la nueva ley de fuerza
 		}
 	}
 	
-	public void addObserver(SimulatorObserver o) {
-		if(!this.listaObservadora.contains(o)) {
-			this.listaObservadora.add(o);
+	public void addObserver(SimulatorObserver o) { //metodo para registrar a las vistas como observadoras
+		if(!this.listaObservadora.contains(o)) { //si la vista NO está en la lista
+			this.listaObservadora.add(o); //se añade
 		}
-		o.onRegister(list, time, deltaTime, f.toString());
+		o.onRegister(list, time, deltaTime, f.toString()); //le pasa a la vista registrada los valores que necesite
 	}
 
 	public double getDeltaTime() {

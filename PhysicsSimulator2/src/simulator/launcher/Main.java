@@ -105,7 +105,7 @@ public class Main {
 			parseDeltaTimeOption(line);
 			parseForceLawsOption(line);
 			parseStateComparatorOption(line);
-			parseModeOption(line);
+			parseModeOption(line); //para parsear el modo -m
 
 			// if there are some remaining arguments, then something wrong is
 			// provided in the command line!
@@ -288,11 +288,11 @@ public class Main {
 		
 		_modeValue = line.getOptionValue("m");
 		
-		if(_modeValue == null) {
+		if(_modeValue == null) { //si el valor es null se coge por defecto batch
 			_modeValue = "batch";
 		}
 		else if(!_modeValue.equalsIgnoreCase("GUI") && !_modeValue.equalsIgnoreCase("batch")) {
-			throw new ParseException("Incorrect mode");
+			throw new ParseException("Incorrect mode"); //si no es ni batch ni gui salta excepcion
 		}
 	}
 
@@ -327,22 +327,22 @@ public class Main {
 		Controller c;
 		PhysicsSimulator ps;
 		
-		if(_forceLawsInfo != null) {
+		if(_forceLawsInfo != null) { //si nos dan inicialmente la ley de fuerza, iniciamos con ella
 			ForceLaws fl = _forceLawsFactory.createInstance(_forceLawsInfo);
 			ps = new PhysicsSimulator(fl, _dtime);
 			c = new Controller(ps, _bodyFactory, _forceLawsFactory);
 		}
-		else {
+		else { //sino se queda a null la ley de fuerzas (se annadira mas adelante)
 			ps = new PhysicsSimulator(null, _dtime);
 			c = new Controller(ps, _bodyFactory, _forceLawsFactory);
 		}
 		
-		if(_inFile != null) {
+		if(_inFile != null) { //si hay fichero de bodies iniciamos con el
 			InputStream in = new FileInputStream(_inFile); //inicializamos el input
 			c.loadBodies(in);
 		}
 		
-		SwingUtilities.invokeAndWait(new Runnable() {
+		SwingUtilities.invokeAndWait(new Runnable() { //abre la ventana pricipal
             @Override
             public void run() {
                 new MainWindow(c);
@@ -352,10 +352,10 @@ public class Main {
 	
 	private static void start(String[] args) throws Exception {
 		parseArgs(args);
-		if(_modeValue.equalsIgnoreCase("GUI")) {
+		if(_modeValue.equalsIgnoreCase("GUI")) { //modo gui
 			startGUIMode();
 		}
-		else {
+		else { //modo batch
 			startBatchMode();
 		}
 	}

@@ -19,14 +19,14 @@ public class BodiesTable extends JPanel {
 	BodiesTable(Controller ctrl) {
 		
 		setLayout(new BorderLayout());
-		
+		//crea un borde nero con el titulo arriba a la izquierda, muy chulo
 		setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createLineBorder(Color.black, 2), "Bodies", 
 				TitledBorder.LEFT, TitledBorder.TOP));
 	
-		BodiesTableModel btm = new BodiesTableModel(ctrl);
-		JTable jt = new JTable(btm);
-		
+		BodiesTableModel btm = new BodiesTableModel(ctrl); //inicializa el modelo de la tabla
+		JTable jt = new JTable(btm); //construye la tabla a partir de ese modelo
+		//mete la tabla en un jscrollpanel para tener scroll de ser necesario
 		this.add(new JScrollPane(jt, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 		setPreferredSize(new Dimension(900, 300));
 	}	
